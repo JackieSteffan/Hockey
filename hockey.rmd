@@ -8,27 +8,82 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-library(rmarkdown)
 knitr::opts_chunk$set(echo = TRUE)
+library(rmarkdown)
+library(devtools)
+library(tidyverse)
+library(httr)
+library(jsonlite)
 render("hockey.md", output_file = "README.md")
 ```
 
-## R Markdown
+## Required Packages
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Load in the following packages:
+`rmarkdown`, `tidyverse`, `devtools`, `httr`, `jsonlite`
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Create Functions
 
-```{r cars}
-summary(cars)
-```
+```{r functions}
+franchise <- function() {
+  franchise_url <- paste0("https://records.nhl.com/site/api/franchise")
+  get_franchise <- GET(franchise_url)
+  txt_franchise <- content(get_franchise, "text")
+  json_franchise <- fromJSON(txt_franchise, flatten=TRUE)
+  return(knitr::kable(json_franchise))
+}
 
-## Including Plots
+franchise()
 
-You can also embed plots, for example:
+franchise_team <- function() {
+  team_url <- paste0("https://records.nhl.com/site/api/franchise-team-totals")
+  get_franchise_team <- GET(team_url)
+  txt_fran_team <- content(get_franchise_team, "text")
+  json_fran_team <- fromJSON(txt_fran_team, flatten = TRUE)
+  return(knitr::kable(json_fran_team))
+}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+franchise_team()
+
+season_record <- function(ID){
+  season_url <- paste0("https://records.nhl.com/site/api/franchise-season-records?cayenneExp=franchiseId=", ID)
+  get_season <- GET(season_url)
+  txt_season <- content(get_season, "text")
+  json_season <- fromJSON(txt_season, flatten = TRUE)
+  return(knitr::kable(json_season))
+}
+
+season_record(ID= 24)  #go Caps!
+
+goalie_record <- function(ID){
+  goalie_url <- paste0("https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=", ID)
+  get_goalie <- GET(goalie_url)
+  txt_goalie <- content(get_goalie, "text")
+  json_goalie <- fromJSON(txt_goalie, flatten = TRUE)
+  return(knitr::kable(json_goalie))
+}
+
+goalie_record(24)
+
+skater_record <- function(ID){
+  skater_url <- paste0("https://records.nhl.com/site/api/franchise-skater-records?cayenneExp=franchiseId=", ID)
+  get_skater <- GET(skater_url)
+  txt_skater <- content(get_skater, "text")
+  json_skater <- fromJSON(txt_skater, flatten = TRUE)
+  return(knitr::kable(json_skater))
+}
+
+skater_record(24)
+
+hockey_stats <- function(){
+  stats_url <- paste0("https://statsapi.web.nhl.com/api/v1/teams")
+  get_stats <- GET(stats_url)
+  txt_stats <- content(get_stats, "text")
+  json_stats <- fromJSON(txt_stats, flatten = TRUE)
+  return(knitr::kable(json_stats))
+}
+
+hockey_stats()
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
