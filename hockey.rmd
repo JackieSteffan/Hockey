@@ -1,9 +1,10 @@
 ---
-title: "Hockey"
+title: "Hockey Project"
 author: "Jackie Steffan"
 date: "9/11/2020"
 output: 
     rmarkdown :: github_document
+    title: "Project 1"
     toc: TRUE
 ---
 
@@ -64,7 +65,7 @@ season_record <- function(ID){
   return(data.frame(json_season))
 }
 
-season_record(ID= 24)  #go Caps!
+season_record(ID= 24)  
 
 goalie_record <- function(ID){
   goalie_url <- paste0("https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=", ID)
@@ -123,6 +124,33 @@ hockey_stats <- function(endpoint, team){
 hockey_stats("?expand=team.roster")
 ```
 
+## Wrapper
+```{r wrapper}
+wrapper <- function(endpoint, ...) {
+  if (endpoint == "/franchise" ) {
+    franchise()
+  }
+  else if (endpoint == "/franchise-team-totals") {
+    franchise_team()
+  }
+  else if (endpoint == "/franchise-season-records?cayenneExp=franchiseId=") {
+    season_record(...)
+  }
+  else if (endpoint == "/franchise-goalie-records?cayenneExp=franchiseId=") {
+    goalie_record(...)
+  }
+  else if (endpoint == "/franchise-skater-records?cayenneExp=franchiseId=") {
+    skater_record(...)
+  }
+  else {
+    hockey_stats()
+  }
+}
+
+wrapper("/franchise")
+wrapper("/franchise-season-records?cayenneExp=franchiseId=", 24)
+```
+
 ## Analytics
 ``` {r data analysis}
 #Join data 
@@ -150,6 +178,7 @@ goals_scored + geom_histogram(fill = "#C8102E", color = "#041E42", size = 2, bin
 #Boxplot
 skater_position2 <- ggplot(data = skater_record(32), aes(x=data.positionCode, y=data.gamesPlayed))
 skater_position2 + geom_boxplot(fill = "#F47A38", col = "#00685E") + labs(x="Position", y= "Games Played", title = "Box Plots of Games Played by position for the Anaheim Ducks")
+skater_position2 +  stat_summary(fun.y = mean, geom = "line", lwd= 1.5, aes(group = data.activePlayer, col= data.activePlayer)) + labs(c="Position", y= "Games Played", title = "Mean games played by position for the Anaheim Ducks by active player")
 #scatterplot
 goalie_scat <- ggplot(data = goalie_record_newVar, aes(x=avg_games, y=data.wins, color = data.activePlayer))
 goalie_scat + geom_point() + labs( x = "Average Games per Season", y = "Total Wins", title = "Total wins by Average games per Season for Washington Capitals Goalies")
