@@ -32,10 +32,10 @@ franchise <- function(team) {
   txt_franchise <- content(get_franchise, "text")
   json_franchise <- fromJSON(txt_franchise, flatten=TRUE)
   if (missing(team)) {
-   return(knitr::kable(json_franchise$data))
+   return(data.frame(json_franchise$data))
     }
   else {filtered <- tibble::as_tibble(json_franchise$data) %>% filter(teamCommonName == team)
-  return(knitr::kable(filtered))
+  return(data.frame(filtered))
   }
 }
 
@@ -61,7 +61,7 @@ season_record <- function(ID){
   get_season <- GET(season_url)
   txt_season <- content(get_season, "text")
   json_season <- fromJSON(txt_season, flatten = TRUE)
-  return(knitr::kable(json_season))
+  return(data.frame(json_season))
 }
 
 season_record(ID= 24)  #go Caps!
@@ -86,41 +86,41 @@ skater_record <- function(ID){
 
 skater_record(24)
 
-# hockey_stats <- function(endpoint, team){
-#   stats_url <- paste0("https://statsapi.web.nhl.com/api/v1/teams", endpoint)
-#   get_stats <- GET(stats_url)
-#   txt_stats <- content(get_stats, "text")
-#   json_stats <- fromJSON(txt_stats, flatten = TRUE)
-#   
-#   if (endpoint == "?expand=team.roster") {
-#   filtered <- tibble::as_tibble(matrix(unlist(json_stats$teams$roster.roster[1:31], use.names = TRUE), ncol =8, byrow = TRUE ))
-#   }
-#   else if (endpoint == "?expand=person.names"){
-#     filtered <- tibble::as_tibble(json_stats$teams)
-#   }
-#   else if (endpoint == "?expand=team.schedule.next") {
-#     filtered <- tibble::as_tibble(json_stats$teams)
-#   }
-#   else if (endpoint == "?expand=team.schedule.previous") {
-#     filtered <- tibble::as_tibble(json_stats$teams)
-#   }
-#   else if (endpoint == "?expand=team.stats"){
-#     filtered <- (json_stats$teams$teamStats)
-#   }
-#   else if (endpoint == "?expand=team.roster&season=20142015") {
-#     filtered <- tibble::as_tibble(json_stats$teams)
-#   }
-#   else if (endpoint == "?teamId=4,5,29") {
-#     filtered <- tibble::as_tibble(json_stats$teams)
-#   }
-#   else {
-#     filtered <- tibble::as_tibble(json_stats$teams)
-#   }
-#   return(knitr::kable(filtered))
-#   }
-# 
-# 
-# hockey_stats("?expand=team.roster")
+hockey_stats <- function(endpoint, team){
+  stats_url <- paste0("https://statsapi.web.nhl.com/api/v1/teams", endpoint)
+  get_stats <- GET(stats_url)
+  txt_stats <- content(get_stats, "text")
+  json_stats <- fromJSON(txt_stats, flatten = TRUE)
+
+  if (endpoint == "?expand=team.roster") {
+  filtered <- tibble::as_tibble(json_stats$teams)
+  }
+  else if (endpoint == "?expand=person.names"){
+    filtered <- data.frame(json_stats$teams)
+  }
+  else if (endpoint == "?expand=team.schedule.next") {
+    filtered <- data.frame(json_stats$teams)
+  }
+  else if (endpoint == "?expand=team.schedule.previous") {
+    filtered <- data.frame(json_stats$teams)
+  }
+  else if (endpoint == "?expand=team.stats"){
+    filtered <- data.frame(json_stats$teams$teamStats)
+  }
+  else if (endpoint == "?expand=team.roster&season=20142015") {
+    filtered <- data.frame(json_stats$teams)
+  }
+  else if (endpoint == "?teamId=4,5,29") {
+    filtered <- data.frame(json_stats$teams)
+  }
+  else {
+    filtered <- data.frame(json_stats$teams)
+  }
+  return(data.frame(filtered))
+  }
+
+
+hockey_stats("?expand=team.roster")
 ```
 
 ## Analytics
