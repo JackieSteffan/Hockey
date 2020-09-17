@@ -16,6 +16,7 @@ library(tidyverse)
 library(httr)
 library(jsonlite)
 library(ggplot2)
+library(DT)
 render("hockey.md", output_file = "README.md")
 ```
 
@@ -33,14 +34,16 @@ franchise <- function(team) {
   txt_franchise <- content(get_franchise, "text")
   json_franchise <- fromJSON(txt_franchise, flatten=TRUE)
   if (missing(team)) {
-   return(data.frame(json_franchise$data))
+   return(as_tibble(json_franchise$data))
     }
-  else {filtered <- tibble::as_tibble(json_franchise$data) %>% filter(teamCommonName == team)
-  return(data.frame(filtered))
-  }
+  else {
+      filtered <- (json_franchise$data) %>% filter(teamCommonName == team)
+    }
+  return(as_tibble(filtered))
 }
 
-franchise()
+franchise("Wild")
+
 
 franchise_team <- function(team) {
   team_url <- paste0("https://records.nhl.com/site/api/franchise-team-totals")
@@ -48,10 +51,10 @@ franchise_team <- function(team) {
   txt_fran_team <- content(get_franchise_team, "text")
   json_fran_team <- fromJSON(txt_fran_team, flatten = TRUE)
   if (missing(team)) {
-   return(data.frame(json_fran_team$data))
+   return(as_tibble(json_fran_team$data))
     }
-  else {filtered <- tibble::as_tibble(json_fran_team$data) %>% filter(teamName == team)
-  return(data.frame(filtered))
+  else {filtered <- (json_fran_team$data) %>% filter(teamName == team)
+  return(as_tibble(filtered))
   }
 }
 
@@ -62,7 +65,7 @@ season_record <- function(ID){
   get_season <- GET(season_url)
   txt_season <- content(get_season, "text")
   json_season <- fromJSON(txt_season, flatten = TRUE)
-  return(data.frame(json_season))
+  return(as_tibble(json_season$data))
 }
 
 season_record(ID= 24)  
@@ -72,7 +75,7 @@ goalie_record <- function(ID){
   get_goalie <- GET(goalie_url)
   txt_goalie <- content(get_goalie, "text")
   json_goalie <- fromJSON(txt_goalie, flatten = TRUE)
-  return(data.frame(json_goalie))
+  return(as_tibble(json_goalie$data))
 }
 
 goalie_record(24)
@@ -82,7 +85,7 @@ skater_record <- function(ID){
   get_skater <- GET(skater_url)
   txt_skater <- content(get_skater, "text")
   json_skater <- fromJSON(txt_skater, flatten = TRUE)
-  return(data.frame(json_skater))
+  return(as_tibble(json_skater$data))
 }
 
 skater_record(24)
@@ -92,32 +95,32 @@ hockey_stats <- function(endpoint, team){
   get_stats <- GET(stats_url)
   txt_stats <- content(get_stats, "text")
   json_stats <- fromJSON(txt_stats, flatten = TRUE)
-
+  names <- json_stats$teams$name
   if (endpoint == "?expand=team.roster") {
-  filtered <- tibble::as_tibble(json_stats$teams)
+  filtered <- list(json_stats$teams[["roster.roster"]], .name_repair = "unique")
   }
   else if (endpoint == "?expand=person.names"){
-    filtered <- data.frame(json_stats$teams)
+    filtered <- as_tibble(data.frame(json_stats$teams))
   }
   else if (endpoint == "?expand=team.schedule.next") {
-    filtered <- data.frame(json_stats$teams)
+    filtered <- list(json_stats$teams[["nextGameSchedule.dates"]], .name_repair = "unique", na.rm = TRUE)
   }
   else if (endpoint == "?expand=team.schedule.previous") {
-    filtered <- data.frame(json_stats$teams)
+    filtered <- list(json_stats$teams[["previousGameSchedule.dates"]])
   }
   else if (endpoint == "?expand=team.stats"){
-    filtered <- data.frame(json_stats$teams$teamStats)
+    filtered <- list(json_stats$teams$teamStats[["splits"]])
   }
   else if (endpoint == "?expand=team.roster&season=20142015") {
-    filtered <- data.frame(json_stats$teams)
+    filtered <- list(json_stats$teams[["roster.roster"]])
   }
   else if (endpoint == "?teamId=4,5,29") {
-    filtered <- data.frame(json_stats$teams)
+    filtered <- list(json_stats$teams)
   }
   else {
-    filtered <- data.frame(json_stats$teams)
+    filtered <- list(json_stats$teams)
   }
-  return(data.frame(filtered))
+  return(list(filtered))
   }
 
 
@@ -154,32 +157,32 @@ wrapper("/franchise-season-records?cayenneExp=franchiseId=", 24)
 ## Analytics
 ``` {r data analysis}
 #Join data 
-right_join(franchise_team(), goalie_record(24), by= c("teamName" = "data.franchiseName"))
+right_join(franchise_team(), goalie_record(24), by= c("teamName" = "franchiseName"))
 
 #2 new vars
-goalie_record_newVar <- goalie_record(24) %>% mutate(avg_games= data.gamesPlayed/data.seasons)
-skater_record_newVar <- skater_record(24) %>% mutate(avg_games = data.gamesPlayed/data.seasons) %>% mutate(goals_season = round(data.goals/data.seasons, 0))
+goalie_record_newVar <- goalie_record(24) %>% mutate(avg_games= gamesPlayed/seasons)
+skater_record_newVar <- skater_record(24) %>% mutate(avg_games = gamesPlayed/seasons) %>% mutate(goals_season = round(goals/seasons, 0))
 
 #contingency tables
-table(skater_record_newVar$data.positionCode, skater_record_newVar$data.goals)
-table(skater_record_newVar$data.seasons, skater_record_newVar$goals_season)
+table(skater_record_newVar$positionCode, skater_record_newVar$goals)
+table(skater_record_newVar$seasons, skater_record_newVar$goals_season)
 table(franchise_team()$teamName, franchise_team()$shootoutWins)
 
 #numerical summaries for quantitative data
 franchise_team() %>% group_by(teamName) %>% summarise(regularandPostWins = sum(wins))
-skater_record(26) %>% group_by(data.positionCode) %>% summarise(avgPts = mean(data.goals))
+skater_record(26) %>% group_by(positionCode) %>% summarise(avgPts = mean(goals))
 
 #Bar Plot
-skater_position <- ggplot(data = skater_record(34), aes(x= data.positionCode))
+skater_position <- ggplot(data = skater_record(34), aes(x= positionCode))
 skater_position+geom_bar(fill = "#ffb81c", col = "#041e42", size = 2) + labs(x="Position", title= "Number of players for each position for the Nashville Predators") +scale_fill_manual(values=("#ffb81c")) + scale_x_discrete(labels = c("Center", "Defenseman", "Left Wing", "Right Wing"))
 #Histogram
-goals_scored <- ggplot(data = skater_record(24), aes(x= data.goals))
+goals_scored <- ggplot(data = skater_record(24), aes(x= goals))
 goals_scored + geom_histogram(fill = "#C8102E", color = "#041E42", size = 2, binwidth = 50) + labs(x= "Goals", title = "Goals Scored by the Washington Capitals")
 #Boxplot
-skater_position2 <- ggplot(data = skater_record(32), aes(x=data.positionCode, y=data.gamesPlayed))
+skater_position2 <- ggplot(data = skater_record(32), aes(x=positionCode, y=gamesPlayed))
 skater_position2 + geom_boxplot(fill = "#F47A38", col = "#00685E") + labs(x="Position", y= "Games Played", title = "Box Plots of Games Played by position for the Anaheim Ducks")
-skater_position2 +  stat_summary(fun.y = mean, geom = "line", lwd= 1.5, aes(group = data.activePlayer, col= data.activePlayer)) + labs(c="Position", y= "Games Played", title = "Mean games played by position for the Anaheim Ducks by active player")
+skater_position2 +  stat_summary(fun.y = mean, geom = "line", lwd= 1.5, aes(group = activePlayer, col= activePlayer)) + labs(c="Position", y= "Games Played", title = "Mean games played by position for the Anaheim Ducks by active player")
 #scatterplot
-goalie_scat <- ggplot(data = goalie_record_newVar, aes(x=avg_games, y=data.wins, color = data.activePlayer))
+goalie_scat <- ggplot(data = goalie_record_newVar, aes(x=avg_games, y=wins, color = activePlayer))
 goalie_scat + geom_point() + labs( x = "Average Games per Season", y = "Total Wins", title = "Total wins by Average games per Season for Washington Capitals Goalies")
 ````
