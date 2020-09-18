@@ -368,13 +368,15 @@ summary {
 <div id="hockey-project" class="section level1">
 <h1>Hockey Project</h1>
 <p>Jackie Steffan 9/11/2020</p>
-<div id="required-packages" class="section level2">
-<h2>Required Packages</h2>
+<pre class="r"><code>render(&quot;hockey.md&quot;, output_file = &quot;README.md&quot;)</code></pre>
+</div>
+<div id="required-packages" class="section level1">
+<h1>Required Packages</h1>
 <p>Load in the following packages: <code>rmarkdown</code>, <code>tidyverse</code>, <code>devtools</code>, <code>httr</code>, <code>jsonlite</code>, <code>ggplot2</code></p>
 </div>
-<div id="create-functions" class="section level2">
-<h2>Create Functions</h2>
-<pre class="r"><code>franchise &lt;- function(team) {
+<div id="create-functions" class="section level1">
+<h1>Create Functions</h1>
+<pre class="r"><code>franchise &lt;- function(team, type) {
   franchise_url &lt;- paste0(&quot;https://records.nhl.com/site/api/franchise&quot;)
   get_franchise &lt;- GET(franchise_url)
   txt_franchise &lt;- content(get_franchise, &quot;text&quot;)
@@ -383,19 +385,21 @@ summary {
    return(as_tibble(json_franchise$data))
     }
   else {
-      filtered &lt;- (json_franchise$data) %&gt;% filter(teamCommonName == team)
-    }
+      filtered&lt;-switch(type, 
+                   num = (json_franchise$data) %&gt;% filter(id == team),
+                   char = (json_franchise$data) %&gt;% filter(teamCommonName == team))
+      }
   return(as_tibble(filtered))
 }
 
-franchise(&quot;Wild&quot;)</code></pre>
+franchise(&quot;Wild&quot;, &quot;char&quot;)</code></pre>
 <pre><code>## No encoding supplied: defaulting to UTF-8.
 
 ## # A tibble: 1 x 6
 ##      id firstSeasonId lastSeasonId mostRecentTeamId teamCommonName teamPlaceName
 ##   &lt;int&gt;         &lt;int&gt;        &lt;int&gt;            &lt;int&gt; &lt;chr&gt;          &lt;chr&gt;        
 ## 1    37      20002001           NA               30 Wild           Minnesota</code></pre>
-<pre class="r"><code>franchise_team &lt;- function(team) {
+<pre class="r"><code>franchise_team &lt;- function(team, type) {
   team_url &lt;- paste0(&quot;https://records.nhl.com/site/api/franchise-team-totals&quot;)
   get_franchise_team &lt;- GET(team_url)
   txt_fran_team &lt;- content(get_franchise_team, &quot;text&quot;)
@@ -403,19 +407,23 @@ franchise(&quot;Wild&quot;)</code></pre>
   if (missing(team)) {
    return(as_tibble(json_fran_team$data))
     }
-  else {filtered &lt;- (json_fran_team$data) %&gt;% filter(teamName == team)
+  else {filtered &lt;- switch(type, 
+                           num = (json_fran_team$data) %&gt;% filter(franchiseId == team),
+                           char = (json_fran_team$data) %&gt;% filter(teamName == team))
+  }
   return(as_tibble(filtered))
   }
-}
 
-franchise_team(&quot;Dallas Stars&quot;)</code></pre>
+franchise_team(15, &quot;num&quot;)</code></pre>
 <pre><code>## No encoding supplied: defaulting to UTF-8.
 
-## # A tibble: 2 x 30
+## # A tibble: 4 x 30
 ##      id activeFranchise firstSeasonId franchiseId gameTypeId gamesPlayed
 ##   &lt;int&gt;           &lt;int&gt;         &lt;int&gt;       &lt;int&gt;      &lt;int&gt;       &lt;int&gt;
 ## 1    49               1      19931994          15          2        2053
 ## 2    50               1      19931994          15          3         194
+## 3    61               1      19671968          15          2        2062
+## 4    62               1      19671968          15          3         166
 ## # ... with 24 more variables: goalsAgainst &lt;int&gt;, goalsFor &lt;int&gt;,
 ## #   homeLosses &lt;int&gt;, homeOvertimeLosses &lt;int&gt;, homeTies &lt;int&gt;, homeWins &lt;int&gt;,
 ## #   lastSeasonId &lt;int&gt;, losses &lt;int&gt;, overtimeLosses &lt;int&gt;,
@@ -536,7 +544,7 @@ skater_record(24)</code></pre>
     filtered &lt;- as_tibble(data.frame(json_stats$teams))
   }
   else if (endpoint == &quot;?expand=team.schedule.next&quot;) {
-    filtered &lt;- list(json_stats$teams[[&quot;nextGameSchedule.dates&quot;]], .name_repair = &quot;unique&quot;, na.rm = TRUE)
+    filtered &lt;- list(json_stats$teams[[&quot;nextGameSchedule.dates&quot;]])
   }
   else if (endpoint == &quot;?expand=team.schedule.previous&quot;) {
     filtered &lt;- list(json_stats$teams[[&quot;previousGameSchedule.dates&quot;]])
@@ -557,236 +565,114 @@ skater_record(24)</code></pre>
   }
 
 
-hockey_stats(&quot;?stats=statsSingleSeasonPlayoffs&quot;)</code></pre>
+hockey_stats(&quot;?expand=team.schedule.next&quot;)</code></pre>
 <pre><code>## [[1]]
 ## [[1]][[1]]
-##    id                  name             link abbreviation       teamName
-## 1   1     New Jersey Devils  /api/v1/teams/1          NJD         Devils
-## 2   2    New York Islanders  /api/v1/teams/2          NYI      Islanders
-## 3   3      New York Rangers  /api/v1/teams/3          NYR        Rangers
-## 4   4   Philadelphia Flyers  /api/v1/teams/4          PHI         Flyers
-## 5   5   Pittsburgh Penguins  /api/v1/teams/5          PIT       Penguins
-## 6   6         Boston Bruins  /api/v1/teams/6          BOS         Bruins
-## 7   7        Buffalo Sabres  /api/v1/teams/7          BUF         Sabres
-## 8   8    Montréal Canadiens  /api/v1/teams/8          MTL      Canadiens
-## 9   9       Ottawa Senators  /api/v1/teams/9          OTT       Senators
-## 10 10   Toronto Maple Leafs /api/v1/teams/10          TOR    Maple Leafs
-## 11 12   Carolina Hurricanes /api/v1/teams/12          CAR     Hurricanes
-## 12 13      Florida Panthers /api/v1/teams/13          FLA       Panthers
-## 13 14   Tampa Bay Lightning /api/v1/teams/14          TBL      Lightning
-## 14 15   Washington Capitals /api/v1/teams/15          WSH       Capitals
-## 15 16    Chicago Blackhawks /api/v1/teams/16          CHI     Blackhawks
-## 16 17     Detroit Red Wings /api/v1/teams/17          DET      Red Wings
-## 17 18   Nashville Predators /api/v1/teams/18          NSH      Predators
-## 18 19       St. Louis Blues /api/v1/teams/19          STL          Blues
-## 19 20        Calgary Flames /api/v1/teams/20          CGY         Flames
-## 20 21    Colorado Avalanche /api/v1/teams/21          COL      Avalanche
-## 21 22       Edmonton Oilers /api/v1/teams/22          EDM         Oilers
-## 22 23     Vancouver Canucks /api/v1/teams/23          VAN        Canucks
-## 23 24         Anaheim Ducks /api/v1/teams/24          ANA          Ducks
-## 24 25          Dallas Stars /api/v1/teams/25          DAL          Stars
-## 25 26     Los Angeles Kings /api/v1/teams/26          LAK          Kings
-## 26 28       San Jose Sharks /api/v1/teams/28          SJS         Sharks
-## 27 29 Columbus Blue Jackets /api/v1/teams/29          CBJ   Blue Jackets
-## 28 30        Minnesota Wild /api/v1/teams/30          MIN           Wild
-## 29 52         Winnipeg Jets /api/v1/teams/52          WPG           Jets
-## 30 53       Arizona Coyotes /api/v1/teams/53          ARI        Coyotes
-## 31 54  Vegas Golden Knights /api/v1/teams/54          VGK Golden Knights
-##    locationName firstYearOfPlay    shortName                    officialSiteUrl
-## 1    New Jersey            1982   New Jersey    http://www.newjerseydevils.com/
-## 2      New York            1972 NY Islanders   http://www.newyorkislanders.com/
-## 3      New York            1926   NY Rangers     http://www.newyorkrangers.com/
-## 4  Philadelphia            1967 Philadelphia http://www.philadelphiaflyers.com/
-## 5    Pittsburgh            1967   Pittsburgh     http://pittsburghpenguins.com/
-## 6        Boston            1924       Boston       http://www.bostonbruins.com/
-## 7       Buffalo            1970      Buffalo             http://www.sabres.com/
-## 8      Montréal            1909     Montréal          http://www.canadiens.com/
-## 9        Ottawa            1990       Ottawa     http://www.ottawasenators.com/
-## 10      Toronto            1917      Toronto         http://www.mapleleafs.com/
-## 11     Carolina            1979     Carolina http://www.carolinahurricanes.com/
-## 12      Florida            1993      Florida    http://www.floridapanthers.com/
-## 13    Tampa Bay            1991    Tampa Bay  http://www.tampabaylightning.com/
-## 14   Washington            1974   Washington http://www.washingtoncapitals.com/
-## 15      Chicago            1926      Chicago  http://www.chicagoblackhawks.com/
-## 16      Detroit            1926      Detroit    http://www.detroitredwings.com/
-## 17    Nashville            1997    Nashville http://www.nashvillepredators.com/
-## 18    St. Louis            1967     St Louis       http://www.stlouisblues.com/
-## 19      Calgary            1980      Calgary      http://www.calgaryflames.com/
-## 20     Colorado            1979     Colorado  http://www.coloradoavalanche.com/
-## 21     Edmonton            1979     Edmonton     http://www.edmontonoilers.com/
-## 22    Vancouver            1970    Vancouver            http://www.canucks.com/
-## 23      Anaheim            1993      Anaheim       http://www.anaheimducks.com/
-## 24       Dallas            1967       Dallas        http://www.dallasstars.com/
-## 25  Los Angeles            1967  Los Angeles            http://www.lakings.com/
-## 26     San Jose            1990     San Jose           http://www.sjsharks.com/
-## 27     Columbus            1997     Columbus        http://www.bluejackets.com/
-## 28    Minnesota            1997    Minnesota               http://www.wild.com/
-## 29     Winnipeg            2011     Winnipeg           http://winnipegjets.com/
-## 30      Arizona            1979      Arizona     http://www.arizonacoyotes.com/
-## 31        Vegas            2016        Vegas http://www.vegasgoldenknights.com/
-##    franchiseId active               venue.name          venue.link   venue.city
-## 1           23   TRUE        Prudential Center /api/v1/venues/null       Newark
-## 2           22   TRUE          Barclays Center /api/v1/venues/5026     Brooklyn
-## 3           10   TRUE    Madison Square Garden /api/v1/venues/5054     New York
-## 4           16   TRUE       Wells Fargo Center /api/v1/venues/5096 Philadelphia
-## 5           17   TRUE         PPG Paints Arena /api/v1/venues/5034   Pittsburgh
-## 6            6   TRUE                TD Garden /api/v1/venues/5085       Boston
-## 7           19   TRUE           KeyBank Center /api/v1/venues/5039      Buffalo
-## 8            1   TRUE              Bell Centre /api/v1/venues/5028     Montréal
-## 9           30   TRUE     Canadian Tire Centre /api/v1/venues/5031       Ottawa
-## 10           5   TRUE         Scotiabank Arena /api/v1/venues/null      Toronto
-## 11          26   TRUE                PNC Arena /api/v1/venues/5066      Raleigh
-## 12          33   TRUE              BB&amp;T Center /api/v1/venues/5027      Sunrise
-## 13          31   TRUE             AMALIE Arena /api/v1/venues/null        Tampa
-## 14          24   TRUE        Capital One Arena /api/v1/venues/5094   Washington
-## 15          11   TRUE            United Center /api/v1/venues/5092      Chicago
-## 16          12   TRUE     Little Caesars Arena /api/v1/venues/5145      Detroit
-## 17          34   TRUE        Bridgestone Arena /api/v1/venues/5030    Nashville
-## 18          18   TRUE        Enterprise Center /api/v1/venues/5076    St. Louis
-## 19          21   TRUE    Scotiabank Saddledome /api/v1/venues/5075      Calgary
-## 20          27   TRUE             Pepsi Center /api/v1/venues/5064       Denver
-## 21          25   TRUE             Rogers Place /api/v1/venues/5100     Edmonton
-## 22          20   TRUE             Rogers Arena /api/v1/venues/5073    Vancouver
-## 23          32   TRUE             Honda Center /api/v1/venues/5046      Anaheim
-## 24          15   TRUE American Airlines Center /api/v1/venues/5019       Dallas
-## 25          14   TRUE           STAPLES Center /api/v1/venues/5081  Los Angeles
-## 26          29   TRUE   SAP Center at San Jose /api/v1/venues/null     San Jose
-## 27          36   TRUE         Nationwide Arena /api/v1/venues/5059     Columbus
-## 28          37   TRUE       Xcel Energy Center /api/v1/venues/5098     St. Paul
-## 29          35   TRUE           Bell MTS Place /api/v1/venues/5058     Winnipeg
-## 30          28   TRUE         Gila River Arena /api/v1/venues/5043     Glendale
-## 31          38   TRUE           T-Mobile Arena /api/v1/venues/5178    Las Vegas
-##    venue.id   venue.timeZone.id venue.timeZone.offset venue.timeZone.tz
-## 1        NA    America/New_York                    -4               EDT
-## 2      5026    America/New_York                    -4               EDT
-## 3      5054    America/New_York                    -4               EDT
-## 4      5096    America/New_York                    -4               EDT
-## 5      5034    America/New_York                    -4               EDT
-## 6      5085    America/New_York                    -4               EDT
-## 7      5039    America/New_York                    -4               EDT
-## 8      5028    America/Montreal                    -4               EDT
-## 9      5031    America/New_York                    -4               EDT
-## 10       NA     America/Toronto                    -4               EDT
-## 11     5066    America/New_York                    -4               EDT
-## 12     5027    America/New_York                    -4               EDT
-## 13       NA    America/New_York                    -4               EDT
-## 14     5094    America/New_York                    -4               EDT
-## 15     5092     America/Chicago                    -5               CDT
-## 16     5145     America/Detroit                    -4               EDT
-## 17     5030     America/Chicago                    -5               CDT
-## 18     5076     America/Chicago                    -5               CDT
-## 19     5075      America/Denver                    -6               MDT
-## 20     5064      America/Denver                    -6               MDT
-## 21     5100    America/Edmonton                    -6               MDT
-## 22     5073   America/Vancouver                    -7               PDT
-## 23     5046 America/Los_Angeles                    -7               PDT
-## 24     5019     America/Chicago                    -5               CDT
-## 25     5081 America/Los_Angeles                    -7               PDT
-## 26       NA America/Los_Angeles                    -7               PDT
-## 27     5059    America/New_York                    -4               EDT
-## 28     5098     America/Chicago                    -5               CDT
-## 29     5058    America/Winnipeg                    -5               CDT
-## 30     5043     America/Phoenix                    -7               MST
-## 31     5178 America/Los_Angeles                    -7               PDT
-##    division.id division.name division.nameShort        division.link
-## 1           18  Metropolitan              Metro /api/v1/divisions/18
-## 2           18  Metropolitan              Metro /api/v1/divisions/18
-## 3           18  Metropolitan              Metro /api/v1/divisions/18
-## 4           18  Metropolitan              Metro /api/v1/divisions/18
-## 5           18  Metropolitan              Metro /api/v1/divisions/18
-## 6           17      Atlantic                ATL /api/v1/divisions/17
-## 7           17      Atlantic                ATL /api/v1/divisions/17
-## 8           17      Atlantic                ATL /api/v1/divisions/17
-## 9           17      Atlantic                ATL /api/v1/divisions/17
-## 10          17      Atlantic                ATL /api/v1/divisions/17
-## 11          18  Metropolitan              Metro /api/v1/divisions/18
-## 12          17      Atlantic                ATL /api/v1/divisions/17
-## 13          17      Atlantic                ATL /api/v1/divisions/17
-## 14          18  Metropolitan              Metro /api/v1/divisions/18
-## 15          16       Central                CEN /api/v1/divisions/16
-## 16          17      Atlantic                ATL /api/v1/divisions/17
-## 17          16       Central                CEN /api/v1/divisions/16
-## 18          16       Central                CEN /api/v1/divisions/16
-## 19          15       Pacific                PAC /api/v1/divisions/15
-## 20          16       Central                CEN /api/v1/divisions/16
-## 21          15       Pacific                PAC /api/v1/divisions/15
-## 22          15       Pacific                PAC /api/v1/divisions/15
-## 23          15       Pacific                PAC /api/v1/divisions/15
-## 24          16       Central                CEN /api/v1/divisions/16
-## 25          15       Pacific                PAC /api/v1/divisions/15
-## 26          15       Pacific                PAC /api/v1/divisions/15
-## 27          18  Metropolitan              Metro /api/v1/divisions/18
-## 28          16       Central                CEN /api/v1/divisions/16
-## 29          16       Central                CEN /api/v1/divisions/16
-## 30          15       Pacific                PAC /api/v1/divisions/15
-## 31          15       Pacific                PAC /api/v1/divisions/15
-##    division.abbreviation conference.id conference.name       conference.link
-## 1                      M             6         Eastern /api/v1/conferences/6
-## 2                      M             6         Eastern /api/v1/conferences/6
-## 3                      M             6         Eastern /api/v1/conferences/6
-## 4                      M             6         Eastern /api/v1/conferences/6
-## 5                      M             6         Eastern /api/v1/conferences/6
-## 6                      A             6         Eastern /api/v1/conferences/6
-## 7                      A             6         Eastern /api/v1/conferences/6
-## 8                      A             6         Eastern /api/v1/conferences/6
-## 9                      A             6         Eastern /api/v1/conferences/6
-## 10                     A             6         Eastern /api/v1/conferences/6
-## 11                     M             6         Eastern /api/v1/conferences/6
-## 12                     A             6         Eastern /api/v1/conferences/6
-## 13                     A             6         Eastern /api/v1/conferences/6
-## 14                     M             6         Eastern /api/v1/conferences/6
-## 15                     C             5         Western /api/v1/conferences/5
-## 16                     A             6         Eastern /api/v1/conferences/6
-## 17                     C             5         Western /api/v1/conferences/5
-## 18                     C             5         Western /api/v1/conferences/5
-## 19                     P             5         Western /api/v1/conferences/5
-## 20                     C             5         Western /api/v1/conferences/5
-## 21                     P             5         Western /api/v1/conferences/5
-## 22                     P             5         Western /api/v1/conferences/5
-## 23                     P             5         Western /api/v1/conferences/5
-## 24                     C             5         Western /api/v1/conferences/5
-## 25                     P             5         Western /api/v1/conferences/5
-## 26                     P             5         Western /api/v1/conferences/5
-## 27                     M             6         Eastern /api/v1/conferences/6
-## 28                     C             5         Western /api/v1/conferences/5
-## 29                     C             5         Western /api/v1/conferences/5
-## 30                     P             5         Western /api/v1/conferences/5
-## 31                     P             5         Western /api/v1/conferences/5
-##    franchise.franchiseId franchise.teamName        franchise.link
-## 1                     23             Devils /api/v1/franchises/23
-## 2                     22          Islanders /api/v1/franchises/22
-## 3                     10            Rangers /api/v1/franchises/10
-## 4                     16             Flyers /api/v1/franchises/16
-## 5                     17           Penguins /api/v1/franchises/17
-## 6                      6             Bruins  /api/v1/franchises/6
-## 7                     19             Sabres /api/v1/franchises/19
-## 8                      1          Canadiens  /api/v1/franchises/1
-## 9                     30           Senators /api/v1/franchises/30
-## 10                     5        Maple Leafs  /api/v1/franchises/5
-## 11                    26         Hurricanes /api/v1/franchises/26
-## 12                    33           Panthers /api/v1/franchises/33
-## 13                    31          Lightning /api/v1/franchises/31
-## 14                    24           Capitals /api/v1/franchises/24
-## 15                    11         Blackhawks /api/v1/franchises/11
-## 16                    12          Red Wings /api/v1/franchises/12
-## 17                    34          Predators /api/v1/franchises/34
-## 18                    18              Blues /api/v1/franchises/18
-## 19                    21             Flames /api/v1/franchises/21
-## 20                    27          Avalanche /api/v1/franchises/27
-## 21                    25             Oilers /api/v1/franchises/25
-## 22                    20            Canucks /api/v1/franchises/20
-## 23                    32              Ducks /api/v1/franchises/32
-## 24                    15              Stars /api/v1/franchises/15
-## 25                    14              Kings /api/v1/franchises/14
-## 26                    29             Sharks /api/v1/franchises/29
-## 27                    36       Blue Jackets /api/v1/franchises/36
-## 28                    37               Wild /api/v1/franchises/37
-## 29                    35               Jets /api/v1/franchises/35
-## 30                    28            Coyotes /api/v1/franchises/28
-## 31                    38     Golden Knights /api/v1/franchises/38</code></pre>
+## [[1]][[1]][[1]]
+## NULL
+## 
+## [[1]][[1]][[2]]
+## NULL
+## 
+## [[1]][[1]][[3]]
+## NULL
+## 
+## [[1]][[1]][[4]]
+## NULL
+## 
+## [[1]][[1]][[5]]
+## NULL
+## 
+## [[1]][[1]][[6]]
+## NULL
+## 
+## [[1]][[1]][[7]]
+## NULL
+## 
+## [[1]][[1]][[8]]
+## NULL
+## 
+## [[1]][[1]][[9]]
+## NULL
+## 
+## [[1]][[1]][[10]]
+## NULL
+## 
+## [[1]][[1]][[11]]
+## NULL
+## 
+## [[1]][[1]][[12]]
+## NULL
+## 
+## [[1]][[1]][[13]]
+##         date totalItems totalEvents totalGames totalMatches
+## 1 2020-09-19          1           0          1            0
+##                                                                                                                                                                                                                                                                                                                  games
+## 1 2019030411, /api/v1/game/2019030411/feed/live, P, 20192020, 2020-09-19T23:30:00Z, Preview, 1, Scheduled, 1, FALSE, 0, 13, 8, 0, league, 25, Dallas Stars, /api/v1/teams/25, 0, 14, 5, 0, league, 14, Tampa Bay Lightning, /api/v1/teams/14, 5100, Rogers Place, /api/v1/venues/5100, /api/v1/game/2019030411/content
+##   events matches
+## 1   NULL    NULL
+## 
+## [[1]][[1]][[14]]
+## NULL
+## 
+## [[1]][[1]][[15]]
+## NULL
+## 
+## [[1]][[1]][[16]]
+## NULL
+## 
+## [[1]][[1]][[17]]
+## NULL
+## 
+## [[1]][[1]][[18]]
+## NULL
+## 
+## [[1]][[1]][[19]]
+## NULL
+## 
+## [[1]][[1]][[20]]
+## NULL
+## 
+## [[1]][[1]][[21]]
+## NULL
+## 
+## [[1]][[1]][[22]]
+## NULL
+## 
+## [[1]][[1]][[23]]
+## NULL
+## 
+## [[1]][[1]][[24]]
+##         date totalItems totalEvents totalGames totalMatches
+## 1 2020-09-19          1           0          1            0
+##                                                                                                                                                                                                                                                                                                                  games
+## 1 2019030411, /api/v1/game/2019030411/feed/live, P, 20192020, 2020-09-19T23:30:00Z, Preview, 1, Scheduled, 1, FALSE, 0, 13, 8, 0, league, 25, Dallas Stars, /api/v1/teams/25, 0, 14, 5, 0, league, 14, Tampa Bay Lightning, /api/v1/teams/14, 5100, Rogers Place, /api/v1/venues/5100, /api/v1/game/2019030411/content
+##   events matches
+## 1   NULL    NULL
+## 
+## [[1]][[1]][[25]]
+## NULL
+## 
+## [[1]][[1]][[26]]
+## NULL
+## 
+## [[1]][[1]][[27]]
+## NULL
+## 
+## [[1]][[1]][[28]]
+## NULL
+## 
+## [[1]][[1]][[29]]
+## NULL
+## 
+## [[1]][[1]][[30]]
+## NULL
+## 
+## [[1]][[1]][[31]]
+## NULL</code></pre>
 </div>
-<div id="wrapper" class="section level2">
-<h2>Wrapper</h2>
+<div id="wrapper" class="section level1">
+<h1>Wrapper</h1>
 <pre class="r"><code>wrapper &lt;- function(endpoint, ...) {
   if (endpoint == &quot;/franchise&quot; ) {
     franchise()
@@ -852,8 +738,8 @@ wrapper(&quot;/franchise&quot;)</code></pre>
 ## #   roadWinlessStreakDates &lt;chr&gt;, winStreak &lt;int&gt;, winStreakDates &lt;chr&gt;,
 ## #   winlessStreak &lt;lgl&gt;, winlessStreakDates &lt;lgl&gt;</code></pre>
 </div>
-<div id="analytics" class="section level2">
-<h2>Analytics</h2>
+<div id="analytics" class="section level1">
+<h1>Analytics</h1>
 <pre class="r"><code>#Join data 
 right_join(franchise_team(), goalie_record(24), by= c(&quot;teamName&quot; = &quot;franchiseName&quot;))</code></pre>
 <pre><code>## No encoding supplied: defaulting to UTF-8.
@@ -1136,7 +1022,6 @@ skater_position2 &lt;- ggplot(data = skater_record(32), aes(x=positionCode, y=ga
 goalie_scat &lt;- ggplot(data = goalie_record_newVar, aes(x=avg_games, y=wins, color = activePlayer))
 goalie_scat + geom_point() + labs( x = &quot;Average Games per Season&quot;, y = &quot;Total Wins&quot;, title = &quot;Total wins by Average games per Season for Washington Capitals Goalies&quot;)</code></pre>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-</div>
 </div>
 
 
