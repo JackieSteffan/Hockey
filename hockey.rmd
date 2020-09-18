@@ -6,7 +6,7 @@ output:
     rmarkdown :: github_document
     toc: TRUE
     toc_depth: 2
-pagetitle: "Hockey"
+    title : "hockey"
 ---
 
 ```{r setup, include=FALSE}
