@@ -2244,7 +2244,7 @@ hockey_stats(&quot;?expand=team.roster&quot;)</code></pre>
 ## 6            32   8471774     Alex Stalock /api/v1/people/8471774             G
 ## 7            46   8474716   Jared Spurgeon /api/v1/people/8474716             D
 ## 8            44   8474749  Matt Bartkowski /api/v1/people/8474749             D
-## 9            90   8475149 Marcus Johansson /api/v1/people/8475149             L
+## 9            90   8475149 Marcus Johansson /api/v1/people/8475149             C
 ## 10           17   8475220   Marcus Foligno /api/v1/people/8475220             L
 ## 11           36   8475692  Mats Zuccarello /api/v1/people/8475692             R
 ## 12           37   8476415         Kyle Rau /api/v1/people/8476415             C
@@ -2276,7 +2276,7 @@ hockey_stats(&quot;?expand=team.roster&quot;)</code></pre>
 ## 6         Goalie        Goalie                     G
 ## 7     Defenseman    Defenseman                     D
 ## 8     Defenseman    Defenseman                     D
-## 9      Left Wing       Forward                    LW
+## 9         Center       Forward                     C
 ## 10     Left Wing       Forward                    LW
 ## 11    Right Wing       Forward                    RW
 ## 12        Center       Forward                     C
@@ -2605,9 +2605,9 @@ table(skater_record_newVar$positionCode, skater_record_newVar$goals)</code></pre
 ##   R  0  0  1  1  1  1  0  0  0  0  1  0  1  0  1  0  1  0  0  0  1  1  0  1  2
 ##    
 ##     58 59 60 62 65 69 72 73 75 77 78 82 83 86 87 91 98 102 105 110 112 113 114
-##   C  1  1  0  1  1  0  0  1  0  0  0  0  0  1  1  1  0   0   0   0   0   0   1
+##   C  1  1  0  1  1  0  0  1  0  0  0  0  0  1  1  1  0   1   0   0   0   0   1
 ##   D  1  0  0  0  0  0  0  0  1  0  0  0  0  1  0  0  1   0   1   0   0   2   0
-##   L  0  0  1  1  1  0  1  0  0  1  0  1  0  0  1  0  0   1   0   0   0   0   0
+##   L  0  0  1  1  1  0  1  0  0  1  0  1  0  0  1  0  0   0   0   0   0   0   0
 ##   R  0  1  1  1  0  1  0  0  0  0  1  0  2  0  0  1  0   0   0   1   1   0   0
 ##    
 ##     118 120 128 129 133 134 140 144 146 149 162 181 182 188 193 195 197 218 243
