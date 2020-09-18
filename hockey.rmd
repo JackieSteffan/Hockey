@@ -3,7 +3,7 @@ title: "Hockey Project"
 author: "Jackie Steffan"
 date: "9/11/2020"
 output: 
-    github_document:
+    rmarkdown :: github_document
     toc: TRUE
     toc_depth: 3
 ---
