@@ -4,8 +4,9 @@ author: "Jackie Steffan"
 date: "9/11/2020"
 output: 
     rmarkdown :: github_document
-    title: "Project 1"
     toc: TRUE
+    toc_depth: 2
+pagetitle: "Hockey"
 ---
 
 ```{r setup, include=FALSE}
@@ -124,7 +125,7 @@ hockey_stats <- function(endpoint, team){
   }
 
 
-hockey_stats("?expand=team.roster")
+hockey_stats("?stats=statsSingleSeasonPlayoffs")
 ```
 
 ## Wrapper
