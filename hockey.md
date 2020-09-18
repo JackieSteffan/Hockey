@@ -3,6 +3,10 @@ Hockey Project
 Jackie Steffan
 9/11/2020
 
+``` r
+render("hockey.md", output_file = "README.md")
+```
+
 ## Required Packages
 
 Load in the following packages: `rmarkdown`, `tidyverse`, `devtools`,

@@ -6,7 +6,6 @@ output:
     rmarkdown :: github_document
     toc: TRUE
     toc_depth: 2
-    title : "hockey"
 ---
 
 ```{r setup, include=FALSE}
@@ -18,6 +17,9 @@ library(httr)
 library(jsonlite)
 library(ggplot2)
 library(DT)
+
+```
+```{r eval=FALSE}
 render("hockey.md", output_file = "README.md")
 ```
 
