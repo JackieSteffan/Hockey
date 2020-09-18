@@ -3,8 +3,8 @@ title: "Hockey Project"
 author: "Jackie Steffan"
 date: "9/11/2020"
 output: 
-    rmarkdown :: github_document
-    toc: TRUE
+  github_document:
+    toc: true
     toc_depth: 2
 ---
 
@@ -17,18 +17,17 @@ library(httr)
 library(jsonlite)
 library(ggplot2)
 library(DT)
-
 ```
 ```{r eval=FALSE}
 render("hockey.md", output_file = "README.md")
 ```
 
-## Required Packages
+# Required Packages
 
 Load in the following packages:
 `rmarkdown`, `tidyverse`, `devtools`, `httr`, `jsonlite`, `ggplot2`
 
-## Create Functions
+# Create Functions
 
 ```{r functions}
 franchise <- function(team) {
@@ -130,7 +129,7 @@ hockey_stats <- function(endpoint, team){
 hockey_stats("?stats=statsSingleSeasonPlayoffs")
 ```
 
-## Wrapper
+# Wrapper
 ```{r wrapper}
 wrapper <- function(endpoint, ...) {
   if (endpoint == "/franchise" ) {
@@ -157,7 +156,7 @@ wrapper("/franchise")
 wrapper("/franchise-season-records?cayenneExp=franchiseId=", 24)
 ```
 
-## Analytics
+# Analytics
 ``` {r data analysis}
 #Join data 
 right_join(franchise_team(), goalie_record(24), by= c("teamName" = "franchiseName"))

@@ -3,16 +3,21 @@ Hockey Project
 Jackie Steffan
 9/11/2020
 
+  - [Required Packages](#required-packages)
+  - [Create Functions](#create-functions)
+  - [Wrapper](#wrapper)
+  - [Analytics](#analytics)
+
 ``` r
 render("hockey.md", output_file = "README.md")
 ```
 
-## Required Packages
+# Required Packages
 
 Load in the following packages: `rmarkdown`, `tidyverse`, `devtools`,
 `httr`, `jsonlite`, `ggplot2`
 
-## Create Functions
+# Create Functions
 
 ``` r
 franchise <- function(team) {
@@ -448,7 +453,7 @@ hockey_stats("?stats=statsSingleSeasonPlayoffs")
     ## 30                    28            Coyotes /api/v1/franchises/28
     ## 31                    38     Golden Knights /api/v1/franchises/38
 
-## Wrapper
+# Wrapper
 
 ``` r
 wrapper <- function(endpoint, ...) {
@@ -522,7 +527,7 @@ wrapper("/franchise-season-records?cayenneExp=franchiseId=", 24)
     ## #   roadWinlessStreakDates <chr>, winStreak <int>, winStreakDates <chr>,
     ## #   winlessStreak <lgl>, winlessStreakDates <lgl>
 
-## Analytics
+# Analytics
 
 ``` r
 #Join data 
