@@ -4,8 +4,8 @@ author: "Jackie Steffan"
 date: "9/11/2020"
 output: 
     rmarkdown :: github_document
+    title: "Project 1"
     toc: TRUE
-    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
