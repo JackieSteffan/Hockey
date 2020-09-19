@@ -3,8 +3,8 @@ title: "Hockey Project"
 author: "Jackie Steffan"
 date: "9/11/2020"
 output: 
-  github_document:
-    toc: true
+    rmarkdown ::github_document:
+      toc: true
 ---
 
 ```{r setup, include=FALSE}
