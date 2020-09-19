@@ -7,6 +7,14 @@ Jackie Steffan
   - [Create Functions](#create-functions)
   - [Wrapper](#wrapper)
   - [Analytics](#analytics)
+      - [Data Join](#data-join)
+      - [New Variables](#new-variables)
+      - [Contingency Tables](#contingency-tables)
+      - [Numerical Summaries](#numerical-summaries)
+      - [Bar Plot](#bar-plot)
+      - [Histogram](#histogram)
+      - [Box Plot](#box-plot)
+      - [Scatterplot](#scatterplot)
 
 ``` r
 render("hockey.md", output_file = "README.md")
@@ -39,7 +47,7 @@ franchise <- function(team, type) {
   return(as_tibble(filtered))
 }
 
-franchise("Wild", "char")
+franchise(26, "num")
 ```
 
     ## No encoding supplied: defaulting to UTF-8.
@@ -47,7 +55,7 @@ franchise("Wild", "char")
     ## # A tibble: 1 x 6
     ##      id firstSeasonId lastSeasonId mostRecentTeamId teamCommonName teamPlaceName
     ##   <int>         <int>        <int>            <int> <chr>          <chr>        
-    ## 1    37      20002001           NA               30 Wild           Minnesota
+    ## 1    26      19791980           NA               12 Hurricanes     Carolina
 
 ``` r
 franchise_team <- function(team, type) {
@@ -538,6 +546,12 @@ wrapper("/franchise-season-records?cayenneExp=franchiseId=", 24)
 
 # Analytics
 
+## Data Join
+
+This is a join to look at franchise information and all goalie
+information. This data specifically pulls information for the Washington
+Capitals.
+
 ``` r
 #Join data 
 right_join(franchise_team(), goalie_record(24), by= c("teamName" = "franchiseName"))
@@ -577,6 +591,12 @@ right_join(franchise_team(), goalie_record(24), by= c("teamName" = "franchiseNam
     ## #   rookieWins <int>, seasons <int>, shutouts.y <int>, ties.y <int>,
     ## #   wins.y <int>
 
+## New Variables
+
+I created new variables to look at the average number of games played in
+a season for goalies and skaters as well as the average goals per season
+for skaters.
+
 ``` r
 #2 new vars
 goalie_record_newVar <- goalie_record(24) %>% mutate(avg_games= gamesPlayed/seasons)
@@ -589,6 +609,16 @@ skater_record_newVar <- skater_record(24) %>% mutate(avg_games = gamesPlayed/sea
 ```
 
     ## No encoding supplied: defaulting to UTF-8.
+
+## Contingency Tables
+
+Below looks at the number of goals scored by each position, the number
+of goals by number of seasons played, and the number of shootout wins
+per team. For number of goals per position, you would expect the sum of
+the forward players to be more than that of the defensemen. For the
+number of goals by seasons played, you would expect the number of goals
+to increase as seasons increased. I wouldn’t expect much of a pattern
+for shootouts, but you can see which teams are better at shootouts.
 
 ``` r
 #contingency tables
@@ -791,6 +821,14 @@ table(franchise_team()$teamName, franchise_team()$shootoutWins)
     ##   Winnipeg Jets            0  0  0  0  0  0  0  0
     ##   Winnipeg Jets (1979)     0  0  0  0  0  0  0  0
 
+## Numerical Summaries
+
+I created numeric summries by grouping on categorical variables and
+making calculations for quantitative data.  
+The first looks at the total regular and post season wins by team. The
+second looks at the average number of goals scored by position for the
+Carolina Hurricanes.
+
 ``` r
 #numerical summaries for quantitative data
 franchise_team() %>% group_by(teamName) %>% summarise(regularandPostWins = sum(wins))
@@ -830,6 +868,13 @@ skater_record(26) %>% group_by(positionCode) %>% summarise(avgPts = mean(goals))
     ## 3 L             26.1 
     ## 4 R             21.6
 
+## Bar Plot
+
+Below is a bar plot for the Nashville Predators. It looks at the total
+number of players that have played each position in the history of the
+franchise. Defensemen is the highest as you typically have multiple
+players on the ice playing this position at one time.
+
 ``` r
 #Bar Plot
 skater_position <- ggplot(data = skater_record(34), aes(x= positionCode))
@@ -841,7 +886,14 @@ skater_position <- ggplot(data = skater_record(34), aes(x= positionCode))
 skater_position+geom_bar(fill = "#ffb81c", col = "#041e42", size = 2) + labs(x="Position", title= "Number of players for each position for the Nashville Predators") +scale_fill_manual(values=("#ffb81c")) + scale_x_discrete(labels = c("Center", "Defenseman", "Left Wing", "Right Wing"))
 ```
 
-![](hockey_files/figure-gfm/data%20analysis-1.png)<!-- -->
+![](hockey_files/figure-gfm/bar%20plot-1.png)<!-- -->
+
+## Histogram
+
+This is a histogram of number of goals scored by each player of the
+Washington Capitals. It is high close to 0 because many players will
+only play for a team for a season, and many will not score a goal during
+this time. They can’t all be Ovechkin.
 
 ``` r
 #Histogram
@@ -854,7 +906,17 @@ goals_scored <- ggplot(data = skater_record(24), aes(x= goals))
 goals_scored + geom_histogram(fill = "#C8102E", color = "#041E42", size = 2, binwidth = 50) + labs(x= "Goals", title = "Goals Scored by the Washington Capitals")
 ```
 
-![](hockey_files/figure-gfm/data%20analysis-2.png)<!-- -->
+![](hockey_files/figure-gfm/histograms-1.png)<!-- -->
+
+## Box Plot
+
+The graph below shows a boxplot of total games played by position. There
+isn’t really a pattern here, just that is is bounded at 0 because many
+players on a roster will not play in a season, or will only play a few
+games with the given franchise.  
+The other graph shows the same data, but line charts for the mean number
+of games played. It is parsed out by players currently on the team and
+players not active on the team.
 
 ``` r
 #Boxplot
@@ -867,15 +929,21 @@ skater_position2 <- ggplot(data = skater_record(32), aes(x=positionCode, y=games
 skater_position2 + geom_boxplot(fill = "#F47A38", col = "#00685E") + labs(x="Position", y= "Games Played", title = "Box Plots of Games Played by position for the Anaheim Ducks")
 ```
 
-![](hockey_files/figure-gfm/data%20analysis-3.png)<!-- -->
+![](hockey_files/figure-gfm/boxplots-1.png)<!-- -->
 
 ``` r
-skater_position2 +  stat_summary(fun.y = mean, geom = "line", lwd= 1.5, aes(group = activePlayer, col= activePlayer)) + labs(c="Position", y= "Games Played", title = "Mean games played by position for the Anaheim Ducks by active player")
+skater_position2 +  stat_summary(fun = mean, geom = "line", lwd= 1.5, aes(group = activePlayer, col= activePlayer)) + labs(c="Position", y= "Games Played", title = "Mean games played by position for the Anaheim Ducks by active player")
 ```
 
-    ## Warning: `fun.y` is deprecated. Use `fun` instead.
+![](hockey_files/figure-gfm/boxplots-2.png)<!-- -->
 
-![](hockey_files/figure-gfm/data%20analysis-4.png)<!-- -->
+## Scatterplot
+
+The last scatterplot shows average games per season by total wins for
+goalies. There appears to be a positive trend, that the more seasons a
+goalie plays, the more wins they will have. This is also parsed out
+between active and non active players. There appears to be about 3
+active goalies for the Capitals.
 
 ``` r
 #scatterplot
@@ -883,4 +951,4 @@ goalie_scat <- ggplot(data = goalie_record_newVar, aes(x=avg_games, y=wins, colo
 goalie_scat + geom_point() + labs( x = "Average Games per Season", y = "Total Wins", title = "Total wins by Average games per Season for Washington Capitals Goalies")
 ```
 
-![](hockey_files/figure-gfm/data%20analysis-5.png)<!-- -->
+![](hockey_files/figure-gfm/scatterplot-1.png)<!-- -->
