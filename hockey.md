@@ -12,10 +12,13 @@ Jackie Steffan
 render("hockey.md", output_file = "README.md")
 ```
 
+Github Repo: <https://github.com/JackieSteffan/Hockey>
+
 # Required Packages
 
-Load in the following packages: `rmarkdown`, `tidyverse`, `devtools`,
-`httr`, `jsonlite`, `ggplot2`
+Load in the following packages:  
+`rmarkdown`, `tidyverse`, `devtools`, `httr`, `jsonlite`, `ggplot2`,
+`DT`
 
 # Create Functions
 
