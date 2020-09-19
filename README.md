@@ -368,6 +368,12 @@ summary {
 <div id="hockey-project" class="section level1">
 <h1>Hockey Project</h1>
 <p>Jackie Steffan 9/11/2020</p>
+<ul>
+<li><a href="#required-packages">Required Packages</a></li>
+<li><a href="#create-functions">Create Functions</a></li>
+<li><a href="#wrapper">Wrapper</a></li>
+<li><a href="#analytics">Analytics</a></li>
+</ul>
 <pre class="r"><code>render(&quot;hockey.md&quot;, output_file = &quot;README.md&quot;)</code></pre>
 </div>
 <div id="required-packages" class="section level1">
