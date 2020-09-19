@@ -229,113 +229,235 @@ hockey_stats <- function(endpoint, team){
   }
 
 
-hockey_stats("?expand=team.schedule.next")
+hockey_stats("?stats=statsSingleSeasonPlayoffs")
 ```
 
     ## [[1]]
     ## [[1]][[1]]
-    ## [[1]][[1]][[1]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[2]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[3]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[4]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[5]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[6]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[7]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[8]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[9]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[10]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[11]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[12]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[13]]
-    ##         date totalItems totalEvents totalGames totalMatches
-    ## 1 2020-09-19          1           0          1            0
-    ##                                                                                                                                                                                                                                                                                                                  games
-    ## 1 2019030411, /api/v1/game/2019030411/feed/live, P, 20192020, 2020-09-19T23:30:00Z, Preview, 1, Scheduled, 1, FALSE, 0, 13, 8, 0, league, 25, Dallas Stars, /api/v1/teams/25, 0, 14, 5, 0, league, 14, Tampa Bay Lightning, /api/v1/teams/14, 5100, Rogers Place, /api/v1/venues/5100, /api/v1/game/2019030411/content
-    ##   events matches
-    ## 1   NULL    NULL
-    ## 
-    ## [[1]][[1]][[14]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[15]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[16]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[17]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[18]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[19]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[20]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[21]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[22]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[23]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[24]]
-    ##         date totalItems totalEvents totalGames totalMatches
-    ## 1 2020-09-19          1           0          1            0
-    ##                                                                                                                                                                                                                                                                                                                  games
-    ## 1 2019030411, /api/v1/game/2019030411/feed/live, P, 20192020, 2020-09-19T23:30:00Z, Preview, 1, Scheduled, 1, FALSE, 0, 13, 8, 0, league, 25, Dallas Stars, /api/v1/teams/25, 0, 14, 5, 0, league, 14, Tampa Bay Lightning, /api/v1/teams/14, 5100, Rogers Place, /api/v1/venues/5100, /api/v1/game/2019030411/content
-    ##   events matches
-    ## 1   NULL    NULL
-    ## 
-    ## [[1]][[1]][[25]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[26]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[27]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[28]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[29]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[30]]
-    ## NULL
-    ## 
-    ## [[1]][[1]][[31]]
-    ## NULL
+    ##    id                  name             link abbreviation       teamName
+    ## 1   1     New Jersey Devils  /api/v1/teams/1          NJD         Devils
+    ## 2   2    New York Islanders  /api/v1/teams/2          NYI      Islanders
+    ## 3   3      New York Rangers  /api/v1/teams/3          NYR        Rangers
+    ## 4   4   Philadelphia Flyers  /api/v1/teams/4          PHI         Flyers
+    ## 5   5   Pittsburgh Penguins  /api/v1/teams/5          PIT       Penguins
+    ## 6   6         Boston Bruins  /api/v1/teams/6          BOS         Bruins
+    ## 7   7        Buffalo Sabres  /api/v1/teams/7          BUF         Sabres
+    ## 8   8    Montréal Canadiens  /api/v1/teams/8          MTL      Canadiens
+    ## 9   9       Ottawa Senators  /api/v1/teams/9          OTT       Senators
+    ## 10 10   Toronto Maple Leafs /api/v1/teams/10          TOR    Maple Leafs
+    ## 11 12   Carolina Hurricanes /api/v1/teams/12          CAR     Hurricanes
+    ## 12 13      Florida Panthers /api/v1/teams/13          FLA       Panthers
+    ## 13 14   Tampa Bay Lightning /api/v1/teams/14          TBL      Lightning
+    ## 14 15   Washington Capitals /api/v1/teams/15          WSH       Capitals
+    ## 15 16    Chicago Blackhawks /api/v1/teams/16          CHI     Blackhawks
+    ## 16 17     Detroit Red Wings /api/v1/teams/17          DET      Red Wings
+    ## 17 18   Nashville Predators /api/v1/teams/18          NSH      Predators
+    ## 18 19       St. Louis Blues /api/v1/teams/19          STL          Blues
+    ## 19 20        Calgary Flames /api/v1/teams/20          CGY         Flames
+    ## 20 21    Colorado Avalanche /api/v1/teams/21          COL      Avalanche
+    ## 21 22       Edmonton Oilers /api/v1/teams/22          EDM         Oilers
+    ## 22 23     Vancouver Canucks /api/v1/teams/23          VAN        Canucks
+    ## 23 24         Anaheim Ducks /api/v1/teams/24          ANA          Ducks
+    ## 24 25          Dallas Stars /api/v1/teams/25          DAL          Stars
+    ## 25 26     Los Angeles Kings /api/v1/teams/26          LAK          Kings
+    ## 26 28       San Jose Sharks /api/v1/teams/28          SJS         Sharks
+    ## 27 29 Columbus Blue Jackets /api/v1/teams/29          CBJ   Blue Jackets
+    ## 28 30        Minnesota Wild /api/v1/teams/30          MIN           Wild
+    ## 29 52         Winnipeg Jets /api/v1/teams/52          WPG           Jets
+    ## 30 53       Arizona Coyotes /api/v1/teams/53          ARI        Coyotes
+    ## 31 54  Vegas Golden Knights /api/v1/teams/54          VGK Golden Knights
+    ##    locationName firstYearOfPlay    shortName                    officialSiteUrl
+    ## 1    New Jersey            1982   New Jersey    http://www.newjerseydevils.com/
+    ## 2      New York            1972 NY Islanders   http://www.newyorkislanders.com/
+    ## 3      New York            1926   NY Rangers     http://www.newyorkrangers.com/
+    ## 4  Philadelphia            1967 Philadelphia http://www.philadelphiaflyers.com/
+    ## 5    Pittsburgh            1967   Pittsburgh     http://pittsburghpenguins.com/
+    ## 6        Boston            1924       Boston       http://www.bostonbruins.com/
+    ## 7       Buffalo            1970      Buffalo             http://www.sabres.com/
+    ## 8      Montréal            1909     Montréal          http://www.canadiens.com/
+    ## 9        Ottawa            1990       Ottawa     http://www.ottawasenators.com/
+    ## 10      Toronto            1917      Toronto         http://www.mapleleafs.com/
+    ## 11     Carolina            1979     Carolina http://www.carolinahurricanes.com/
+    ## 12      Florida            1993      Florida    http://www.floridapanthers.com/
+    ## 13    Tampa Bay            1991    Tampa Bay  http://www.tampabaylightning.com/
+    ## 14   Washington            1974   Washington http://www.washingtoncapitals.com/
+    ## 15      Chicago            1926      Chicago  http://www.chicagoblackhawks.com/
+    ## 16      Detroit            1926      Detroit    http://www.detroitredwings.com/
+    ## 17    Nashville            1997    Nashville http://www.nashvillepredators.com/
+    ## 18    St. Louis            1967     St Louis       http://www.stlouisblues.com/
+    ## 19      Calgary            1980      Calgary      http://www.calgaryflames.com/
+    ## 20     Colorado            1979     Colorado  http://www.coloradoavalanche.com/
+    ## 21     Edmonton            1979     Edmonton     http://www.edmontonoilers.com/
+    ## 22    Vancouver            1970    Vancouver            http://www.canucks.com/
+    ## 23      Anaheim            1993      Anaheim       http://www.anaheimducks.com/
+    ## 24       Dallas            1967       Dallas        http://www.dallasstars.com/
+    ## 25  Los Angeles            1967  Los Angeles            http://www.lakings.com/
+    ## 26     San Jose            1990     San Jose           http://www.sjsharks.com/
+    ## 27     Columbus            1997     Columbus        http://www.bluejackets.com/
+    ## 28    Minnesota            1997    Minnesota               http://www.wild.com/
+    ## 29     Winnipeg            2011     Winnipeg           http://winnipegjets.com/
+    ## 30      Arizona            1979      Arizona     http://www.arizonacoyotes.com/
+    ## 31        Vegas            2016        Vegas http://www.vegasgoldenknights.com/
+    ##    franchiseId active               venue.name          venue.link   venue.city
+    ## 1           23   TRUE        Prudential Center /api/v1/venues/null       Newark
+    ## 2           22   TRUE          Barclays Center /api/v1/venues/5026     Brooklyn
+    ## 3           10   TRUE    Madison Square Garden /api/v1/venues/5054     New York
+    ## 4           16   TRUE       Wells Fargo Center /api/v1/venues/5096 Philadelphia
+    ## 5           17   TRUE         PPG Paints Arena /api/v1/venues/5034   Pittsburgh
+    ## 6            6   TRUE                TD Garden /api/v1/venues/5085       Boston
+    ## 7           19   TRUE           KeyBank Center /api/v1/venues/5039      Buffalo
+    ## 8            1   TRUE              Bell Centre /api/v1/venues/5028     Montréal
+    ## 9           30   TRUE     Canadian Tire Centre /api/v1/venues/5031       Ottawa
+    ## 10           5   TRUE         Scotiabank Arena /api/v1/venues/null      Toronto
+    ## 11          26   TRUE                PNC Arena /api/v1/venues/5066      Raleigh
+    ## 12          33   TRUE              BB&T Center /api/v1/venues/5027      Sunrise
+    ## 13          31   TRUE             AMALIE Arena /api/v1/venues/null        Tampa
+    ## 14          24   TRUE        Capital One Arena /api/v1/venues/5094   Washington
+    ## 15          11   TRUE            United Center /api/v1/venues/5092      Chicago
+    ## 16          12   TRUE     Little Caesars Arena /api/v1/venues/5145      Detroit
+    ## 17          34   TRUE        Bridgestone Arena /api/v1/venues/5030    Nashville
+    ## 18          18   TRUE        Enterprise Center /api/v1/venues/5076    St. Louis
+    ## 19          21   TRUE    Scotiabank Saddledome /api/v1/venues/5075      Calgary
+    ## 20          27   TRUE             Pepsi Center /api/v1/venues/5064       Denver
+    ## 21          25   TRUE             Rogers Place /api/v1/venues/5100     Edmonton
+    ## 22          20   TRUE             Rogers Arena /api/v1/venues/5073    Vancouver
+    ## 23          32   TRUE             Honda Center /api/v1/venues/5046      Anaheim
+    ## 24          15   TRUE American Airlines Center /api/v1/venues/5019       Dallas
+    ## 25          14   TRUE           STAPLES Center /api/v1/venues/5081  Los Angeles
+    ## 26          29   TRUE   SAP Center at San Jose /api/v1/venues/null     San Jose
+    ## 27          36   TRUE         Nationwide Arena /api/v1/venues/5059     Columbus
+    ## 28          37   TRUE       Xcel Energy Center /api/v1/venues/5098     St. Paul
+    ## 29          35   TRUE           Bell MTS Place /api/v1/venues/5058     Winnipeg
+    ## 30          28   TRUE         Gila River Arena /api/v1/venues/5043     Glendale
+    ## 31          38   TRUE           T-Mobile Arena /api/v1/venues/5178    Las Vegas
+    ##    venue.id   venue.timeZone.id venue.timeZone.offset venue.timeZone.tz
+    ## 1        NA    America/New_York                    -4               EDT
+    ## 2      5026    America/New_York                    -4               EDT
+    ## 3      5054    America/New_York                    -4               EDT
+    ## 4      5096    America/New_York                    -4               EDT
+    ## 5      5034    America/New_York                    -4               EDT
+    ## 6      5085    America/New_York                    -4               EDT
+    ## 7      5039    America/New_York                    -4               EDT
+    ## 8      5028    America/Montreal                    -4               EDT
+    ## 9      5031    America/New_York                    -4               EDT
+    ## 10       NA     America/Toronto                    -4               EDT
+    ## 11     5066    America/New_York                    -4               EDT
+    ## 12     5027    America/New_York                    -4               EDT
+    ## 13       NA    America/New_York                    -4               EDT
+    ## 14     5094    America/New_York                    -4               EDT
+    ## 15     5092     America/Chicago                    -5               CDT
+    ## 16     5145     America/Detroit                    -4               EDT
+    ## 17     5030     America/Chicago                    -5               CDT
+    ## 18     5076     America/Chicago                    -5               CDT
+    ## 19     5075      America/Denver                    -6               MDT
+    ## 20     5064      America/Denver                    -6               MDT
+    ## 21     5100    America/Edmonton                    -6               MDT
+    ## 22     5073   America/Vancouver                    -7               PDT
+    ## 23     5046 America/Los_Angeles                    -7               PDT
+    ## 24     5019     America/Chicago                    -5               CDT
+    ## 25     5081 America/Los_Angeles                    -7               PDT
+    ## 26       NA America/Los_Angeles                    -7               PDT
+    ## 27     5059    America/New_York                    -4               EDT
+    ## 28     5098     America/Chicago                    -5               CDT
+    ## 29     5058    America/Winnipeg                    -5               CDT
+    ## 30     5043     America/Phoenix                    -7               MST
+    ## 31     5178 America/Los_Angeles                    -7               PDT
+    ##    division.id division.name division.nameShort        division.link
+    ## 1           18  Metropolitan              Metro /api/v1/divisions/18
+    ## 2           18  Metropolitan              Metro /api/v1/divisions/18
+    ## 3           18  Metropolitan              Metro /api/v1/divisions/18
+    ## 4           18  Metropolitan              Metro /api/v1/divisions/18
+    ## 5           18  Metropolitan              Metro /api/v1/divisions/18
+    ## 6           17      Atlantic                ATL /api/v1/divisions/17
+    ## 7           17      Atlantic                ATL /api/v1/divisions/17
+    ## 8           17      Atlantic                ATL /api/v1/divisions/17
+    ## 9           17      Atlantic                ATL /api/v1/divisions/17
+    ## 10          17      Atlantic                ATL /api/v1/divisions/17
+    ## 11          18  Metropolitan              Metro /api/v1/divisions/18
+    ## 12          17      Atlantic                ATL /api/v1/divisions/17
+    ## 13          17      Atlantic                ATL /api/v1/divisions/17
+    ## 14          18  Metropolitan              Metro /api/v1/divisions/18
+    ## 15          16       Central                CEN /api/v1/divisions/16
+    ## 16          17      Atlantic                ATL /api/v1/divisions/17
+    ## 17          16       Central                CEN /api/v1/divisions/16
+    ## 18          16       Central                CEN /api/v1/divisions/16
+    ## 19          15       Pacific                PAC /api/v1/divisions/15
+    ## 20          16       Central                CEN /api/v1/divisions/16
+    ## 21          15       Pacific                PAC /api/v1/divisions/15
+    ## 22          15       Pacific                PAC /api/v1/divisions/15
+    ## 23          15       Pacific                PAC /api/v1/divisions/15
+    ## 24          16       Central                CEN /api/v1/divisions/16
+    ## 25          15       Pacific                PAC /api/v1/divisions/15
+    ## 26          15       Pacific                PAC /api/v1/divisions/15
+    ## 27          18  Metropolitan              Metro /api/v1/divisions/18
+    ## 28          16       Central                CEN /api/v1/divisions/16
+    ## 29          16       Central                CEN /api/v1/divisions/16
+    ## 30          15       Pacific                PAC /api/v1/divisions/15
+    ## 31          15       Pacific                PAC /api/v1/divisions/15
+    ##    division.abbreviation conference.id conference.name       conference.link
+    ## 1                      M             6         Eastern /api/v1/conferences/6
+    ## 2                      M             6         Eastern /api/v1/conferences/6
+    ## 3                      M             6         Eastern /api/v1/conferences/6
+    ## 4                      M             6         Eastern /api/v1/conferences/6
+    ## 5                      M             6         Eastern /api/v1/conferences/6
+    ## 6                      A             6         Eastern /api/v1/conferences/6
+    ## 7                      A             6         Eastern /api/v1/conferences/6
+    ## 8                      A             6         Eastern /api/v1/conferences/6
+    ## 9                      A             6         Eastern /api/v1/conferences/6
+    ## 10                     A             6         Eastern /api/v1/conferences/6
+    ## 11                     M             6         Eastern /api/v1/conferences/6
+    ## 12                     A             6         Eastern /api/v1/conferences/6
+    ## 13                     A             6         Eastern /api/v1/conferences/6
+    ## 14                     M             6         Eastern /api/v1/conferences/6
+    ## 15                     C             5         Western /api/v1/conferences/5
+    ## 16                     A             6         Eastern /api/v1/conferences/6
+    ## 17                     C             5         Western /api/v1/conferences/5
+    ## 18                     C             5         Western /api/v1/conferences/5
+    ## 19                     P             5         Western /api/v1/conferences/5
+    ## 20                     C             5         Western /api/v1/conferences/5
+    ## 21                     P             5         Western /api/v1/conferences/5
+    ## 22                     P             5         Western /api/v1/conferences/5
+    ## 23                     P             5         Western /api/v1/conferences/5
+    ## 24                     C             5         Western /api/v1/conferences/5
+    ## 25                     P             5         Western /api/v1/conferences/5
+    ## 26                     P             5         Western /api/v1/conferences/5
+    ## 27                     M             6         Eastern /api/v1/conferences/6
+    ## 28                     C             5         Western /api/v1/conferences/5
+    ## 29                     C             5         Western /api/v1/conferences/5
+    ## 30                     P             5         Western /api/v1/conferences/5
+    ## 31                     P             5         Western /api/v1/conferences/5
+    ##    franchise.franchiseId franchise.teamName        franchise.link
+    ## 1                     23             Devils /api/v1/franchises/23
+    ## 2                     22          Islanders /api/v1/franchises/22
+    ## 3                     10            Rangers /api/v1/franchises/10
+    ## 4                     16             Flyers /api/v1/franchises/16
+    ## 5                     17           Penguins /api/v1/franchises/17
+    ## 6                      6             Bruins  /api/v1/franchises/6
+    ## 7                     19             Sabres /api/v1/franchises/19
+    ## 8                      1          Canadiens  /api/v1/franchises/1
+    ## 9                     30           Senators /api/v1/franchises/30
+    ## 10                     5        Maple Leafs  /api/v1/franchises/5
+    ## 11                    26         Hurricanes /api/v1/franchises/26
+    ## 12                    33           Panthers /api/v1/franchises/33
+    ## 13                    31          Lightning /api/v1/franchises/31
+    ## 14                    24           Capitals /api/v1/franchises/24
+    ## 15                    11         Blackhawks /api/v1/franchises/11
+    ## 16                    12          Red Wings /api/v1/franchises/12
+    ## 17                    34          Predators /api/v1/franchises/34
+    ## 18                    18              Blues /api/v1/franchises/18
+    ## 19                    21             Flames /api/v1/franchises/21
+    ## 20                    27          Avalanche /api/v1/franchises/27
+    ## 21                    25             Oilers /api/v1/franchises/25
+    ## 22                    20            Canucks /api/v1/franchises/20
+    ## 23                    32              Ducks /api/v1/franchises/32
+    ## 24                    15              Stars /api/v1/franchises/15
+    ## 25                    14              Kings /api/v1/franchises/14
+    ## 26                    29             Sharks /api/v1/franchises/29
+    ## 27                    36       Blue Jackets /api/v1/franchises/36
+    ## 28                    37               Wild /api/v1/franchises/37
+    ## 29                    35               Jets /api/v1/franchises/35
+    ## 30                    28            Coyotes /api/v1/franchises/28
+    ## 31                    38     Golden Knights /api/v1/franchises/38
 
 # Wrapper
 

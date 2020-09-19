@@ -129,7 +129,7 @@ hockey_stats <- function(endpoint, team){
   }
 
 
-hockey_stats("?expand=team.schedule.next")
+hockey_stats("?stats=statsSingleSeasonPlayoffs")
 ```
 
 # Wrapper
