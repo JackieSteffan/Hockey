@@ -3,6 +3,11 @@ Hockey Project
 Jackie Steffan
 9/11/2020
 
+  - [Required Packages](#required-packages)
+  - [Create Functions](#create-functions)
+  - [Wrapper](#wrapper)
+  - [Analytics](#analytics)
+
 ``` r
 render("hockey.md", output_file = "README.md")
 ```

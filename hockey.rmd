@@ -2,11 +2,9 @@
 title: "Hockey Project"
 author: "Jackie Steffan"
 date: "9/11/2020"
-output:
-    rmarkdown:: github_document
-    includes: 
+output: 
+  github_document:
     toc: true
-    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
