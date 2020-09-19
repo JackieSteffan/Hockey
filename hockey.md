@@ -475,10 +475,10 @@ hockey_stats("?stats=statsSingleSeasonPlayoffs")
 ``` r
 wrapper <- function(endpoint, ...) {
   if (endpoint == "/franchise" ) {
-    franchise()
+    franchise(...)
   }
   else if (endpoint == "/franchise-team-totals") {
-    franchise_team()
+    franchise_team(...)
   }
   else if (endpoint == "/franchise-season-records?cayenneExp=franchiseId=") {
     season_record(...)
@@ -490,7 +490,7 @@ wrapper <- function(endpoint, ...) {
     skater_record(...)
   }
   else {
-    hockey_stats()
+    hockey_stats(...)
   }
 }
 

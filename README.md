@@ -815,10 +815,10 @@ hockey_stats(&quot;?stats=statsSingleSeasonPlayoffs&quot;)</code></pre>
 <h1>Wrapper</h1>
 <pre class="r"><code>wrapper &lt;- function(endpoint, ...) {
   if (endpoint == &quot;/franchise&quot; ) {
-    franchise()
+    franchise(...)
   }
   else if (endpoint == &quot;/franchise-team-totals&quot;) {
-    franchise_team()
+    franchise_team(...)
   }
   else if (endpoint == &quot;/franchise-season-records?cayenneExp=franchiseId=&quot;) {
     season_record(...)
@@ -830,7 +830,7 @@ hockey_stats(&quot;?stats=statsSingleSeasonPlayoffs&quot;)</code></pre>
     skater_record(...)
   }
   else {
-    hockey_stats()
+    hockey_stats(...)
   }
 }
 
